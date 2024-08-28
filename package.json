@@ -1,6 +1,6 @@
 {
   "name": "@giancosta86/prismatic",
-  "version": "1.0.0-alpha",
+  "version": "1.0.0-alpha.2",
   "type": "module",
   "description": "TypeScript utilities for NodeJS",
   "keywords": [

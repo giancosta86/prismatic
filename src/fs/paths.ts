@@ -1,4 +1,4 @@
-import { PathLike } from "node:fs";
+import { PathLike, RmOptions } from "node:fs";
 import { access, constants, rm } from "node:fs/promises";
 import process from "node:process";
 
@@ -69,10 +69,13 @@ export async function switchToDirectory(
 /**
  * Recursively deletes files and directories, applying retries in case of errors.
  */
-export const safeRm = (path: PathLike) =>
-  rm(path, {
+export async function safeRm(...paths: PathLike[]): Promise<void> {
+  const SAFE_RM_OPTIONS: RmOptions = {
     force: true,
     recursive: true,
     maxRetries: 4,
     retryDelay: 100,
-  });
+  };
+
+  await Promise.all(paths.map((path) => rm(path, SAFE_RM_OPTIONS)));
+}
