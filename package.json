@@ -1,0 +1,57 @@
+{
+  "name": "@giancosta86/prismatic",
+  "version": "1.0.0-alpha.1",
+  "type": "module",
+  "description": "TypeScript utilities for NodeJS",
+  "keywords": [
+    "NodeJS",
+    "utilities",
+    "TypeScript"
+  ],
+  "homepage": "https://github.com/giancosta86/prismatic#readme",
+  "bugs": "https://github.com/giancosta86/prismatic/issues",
+  "license": "MIT",
+  "author": {
+    "name": "Gianluca Costa",
+    "email": "gianluca@gianlucacosta.info",
+    "url": "https://gianlucacosta.info/"
+  },
+  "files": [
+    "./dist"
+  ],
+  "exports": {
+    "./env": {
+      "types": "./dist/env/index.d.ts",
+      "import": "./dist/env/index.js"
+    },
+    "./fs": {
+      "types": "./dist/fs/index.d.ts",
+      "import": "./dist/fs/index.js"
+    },
+    "./logging": {
+      "types": "./dist/logging/index.d.ts",
+      "import": "./dist/logging/index.js"
+    },
+    "./packages": {
+      "types": "./dist/packages/index.d.ts",
+      "import": "./dist/packages/index.js"
+    },
+    "./run": {
+      "types": "./dist/run/index.d.ts",
+      "import": "./dist/run/index.js"
+    }
+  },
+  "repository": "giancosta86/prismatic",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && resolve-tspaths -p tsconfig.build.json",
+    "test": "vitest",
+    "prepack": "pnpm test && pnpm build"
+  },
+  "devDependencies": {
+    "@types/node": "^22.5.1",
+    "resolve-tspaths": "^0.8.19",
+    "typescript": "^5.5.4",
+    "vite-tsconfig-paths": "^5.0.1",
+    "vitest": "^2.0.5"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.lib.json",
+
+  "include": ["src/**/*", "tests/**/*"],
+
+  "compilerOptions": {
+    "rootDir": ".",
+    "noEmit": true,
+
+    "baseUrl": ".",
+    "paths": {
+      "~/env": ["src/env/index.js"],
+      "~/fs": ["src/fs/index.js"],
+      "~/logging": ["src/logging/index.js"],
+      "~/packages": ["src/packages/index.js"],
+      "~/run": ["src/run/index.js"]
+    }
+  }
+}

@@ -1,0 +1,17 @@
+name: Publish to NPM
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: giancosta86/aurora-github/actions/npm@main
+        with:
+          npm-token: ${{ secrets.NPM_TOKEN }}
