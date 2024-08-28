@@ -1,6 +1,7 @@
 import { PathLike, RmOptions } from "node:fs";
 import { access, constants, rm } from "node:fs/promises";
 import process from "node:process";
+import { rimraf } from "rimraf";
 
 /**
  * Returns true if the given file or directory exists.
@@ -69,13 +70,10 @@ export async function switchToDirectory(
 /**
  * Recursively deletes files and directories, applying retries in case of errors.
  */
-export async function safeRm(...paths: PathLike[]): Promise<void> {
-  const SAFE_RM_OPTIONS: RmOptions = {
-    force: true,
-    recursive: true,
-    maxRetries: 4,
+export async function safeRm(...paths: string[]): Promise<void> {
+  await rimraf(paths, {
+    glob: true,
     retryDelay: 100,
-  };
-
-  await Promise.all(paths.map((path) => rm(path, SAFE_RM_OPTIONS)));
+    maxRetries: 4,
+  });
 }

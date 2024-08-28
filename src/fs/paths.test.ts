@@ -172,4 +172,19 @@ describe("Safe removal", () => {
         await assertMissing("t.txt");
       }));
   });
+
+  it("should support globs", () =>
+    switchToTempDirectory(async () => {
+      await writeToArbitraryFile(join("a", "b", "c", "d.txt"));
+
+      await writeToArbitraryFile("alpha.txt");
+
+      await writeToArbitraryFile("az.txt");
+
+      await safeRm("a*");
+
+      await assertMissing("a");
+      await assertMissing("alpha.txt");
+      await assertMissing("az.txt");
+    }));
 });

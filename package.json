@@ -1,6 +1,6 @@
 {
   "name": "@giancosta86/prismatic",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-alpha.3",
   "type": "module",
   "description": "TypeScript utilities for NodeJS",
   "keywords": [
@@ -53,5 +53,8 @@
     "typescript": "^5.5.4",
     "vite-tsconfig-paths": "^5.0.1",
     "vitest": "^2.0.5"
+  },
+  "dependencies": {
+    "rimraf": "^6.0.1"
   }
 }
