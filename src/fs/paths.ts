@@ -1,5 +1,4 @@
-import { PathLike, RmOptions } from "node:fs";
-import { access, constants, rm } from "node:fs/promises";
+import { access, constants } from "node:fs/promises";
 import process from "node:process";
 import { rimraf } from "rimraf";
 
