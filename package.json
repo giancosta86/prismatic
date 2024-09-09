@@ -1,6 +1,6 @@
 {
   "name": "@giancosta86/prismatic",
-  "version": "1.0.0-alpha.5",
+  "version": "0.0.0",
   "type": "module",
   "description": "TypeScript utilities for NodeJS",
   "keywords": [
@@ -43,9 +43,10 @@
   },
   "repository": "giancosta86/prismatic",
   "scripts": {
-    "build": "tsc -p tsconfig.build.json && resolve-tspaths -p tsconfig.build.json",
     "test": "vitest",
-    "prepack": "pnpm test && pnpm build"
+    "build": "tsc -p tsconfig.build.json && resolve-tspaths -p tsconfig.build.json",
+    "verify": "pnpm test && pnpm build",
+    "prepack": "pnpm build"
   },
   "devDependencies": {
     "@types/node": "^22.5.1",
