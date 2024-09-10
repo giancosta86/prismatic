@@ -7,7 +7,7 @@ import {
   assertMissing,
   assertExistence,
   switchToDirectory,
-  safeRm
+  safeRm,
 } from "./paths.js";
 import { writeToArbitraryFile } from "./data.js";
 import { switchToTempDirectory, withTempDirectory } from "./temp.js";
@@ -109,14 +109,14 @@ describe("Asserting the existence of a file/directory", () => {
 
 describe("Switching to a directory", () => {
   it("should change to the requested directory", () =>
-    withTempDirectory("prismatic", tempDirectory =>
+    withTempDirectory("prismatic", (tempDirectory) =>
       switchToDirectory(tempDirectory, () => {
         expect(process.cwd()).toBe(tempDirectory);
       })
     ));
 
   it("should revert to the original directory in the end", () =>
-    withTempDirectory("prismatic", async tempDirectory => {
+    withTempDirectory("prismatic", async (tempDirectory) => {
       const oldDirectory = process.cwd();
 
       await switchToDirectory(tempDirectory, () => {});
@@ -125,11 +125,11 @@ describe("Switching to a directory", () => {
     }));
 });
 
-describe("Removing a directory tree", () => {
-  describe("if the root directory exists", () => {
+describe("Safe removal", () => {
+  describe("when removing a directory tree", () => {
     it("should work", () =>
       switchToTempDirectory(async () => {
-        await writeToArbitraryFile(join("a", "b", "c", "d.txt", "Dodo"));
+        await writeToArbitraryFile(join("a", "b", "c", "d.txt"), "Dodo");
 
         await safeRm("a");
 
@@ -137,10 +137,54 @@ describe("Removing a directory tree", () => {
       }));
   });
 
-  describe("if the root directory is missing", () => {
+  describe("when removing a file", () =>
+    it("should work", () =>
+      switchToTempDirectory(async () => {
+        const testFile = join("a", "b", "c", "d.txt");
+
+        await writeToArbitraryFile(testFile);
+
+        await safeRm(testFile);
+
+        await assertMissing(testFile);
+      })));
+
+  describe("when the path is missing", () => {
     it("should still work", () =>
       switchToTempDirectory(async () => {
         await safeRm("<MISSING>");
       }));
   });
+
+  describe("when more directories and files are removed at once", () => {
+    it("should remove them all", () =>
+      switchToTempDirectory(async () => {
+        await writeToArbitraryFile(join("a", "b", "c", "d.txt"));
+        await writeToArbitraryFile(join("r", "sigma.txt"));
+        await writeToArbitraryFile("x.txt");
+        await writeToArbitraryFile("y.txt");
+
+        await safeRm("a", "r", "x.txt", "y.txt");
+
+        await assertMissing("a");
+        await assertMissing("r");
+        await assertMissing("x.txt");
+        await assertMissing("t.txt");
+      }));
+  });
+
+  it("should support globs", () =>
+    switchToTempDirectory(async () => {
+      await writeToArbitraryFile(join("a", "b", "c", "d.txt"));
+
+      await writeToArbitraryFile("alpha.txt");
+
+      await writeToArbitraryFile("az.txt");
+
+      await safeRm("a*");
+
+      await assertMissing("a");
+      await assertMissing("alpha.txt");
+      await assertMissing("az.txt");
+    }));
 });
