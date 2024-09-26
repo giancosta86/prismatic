@@ -1,4 +1,4 @@
-import { runInShell } from "@giancosta86/prismatic/run";
+import { runInShell } from "./shell.js";
 
 /**
  * Uses `pnpm` to run a pnpm command in the current directory.
