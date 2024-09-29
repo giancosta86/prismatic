@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.lib.json",
 
-  "include": ["src/**/*", "tests/**/*"],
+  "include": ["src/**/*", "tests/**/*", "globals.d.ts"],
 
   "compilerOptions": {
     "rootDir": ".",

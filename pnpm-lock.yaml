@@ -12,6 +12,9 @@ importers:
         specifier: ^6.0.1
         version: 6.0.1
     devDependencies:
+      '@giancosta86/rigoletto':
+        specifier: link:../rigoletto
+        version: link:../rigoletto
       '@types/node':
         specifier: ^22.7.2
         version: 22.7.2

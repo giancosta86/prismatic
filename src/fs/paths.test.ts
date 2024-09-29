@@ -1,14 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import {
-  exists,
-  assertExisting,
-  assertMissing,
-  assertExistence,
-  switchToDirectory,
-  safeRm,
-} from "./paths.js";
+import { exists, switchToDirectory, safeRm } from "./paths.js";
 import { writeToArbitraryFile } from "./data.js";
 import { switchToTempDirectory, withTempDirectory } from "./temp.js";
 
@@ -31,79 +23,6 @@ describe("File existence", () => {
 
         expect(result).toBe(false);
       }));
-  });
-});
-
-describe("Asserting a file/directory exists in the file system", () => {
-  describe("when the subject exists", () => {
-    describe("when the subject is a file", () => {
-      it("should resolve", () =>
-        switchToTempDirectory(async () => {
-          await writeFile("test.txt", "Test");
-          await assertExisting("test.txt");
-        }));
-    });
-
-    describe("when the subject is a directory", () => {
-      it("should resolve", () =>
-        switchToTempDirectory(async () => {
-          await mkdir("my_dir");
-          await assertExisting("my_dir");
-        }));
-    });
-  });
-
-  describe("when the subject is missing", () => {
-    it("should reject", () =>
-      switchToTempDirectory(() =>
-        expect(assertExisting("<MISSING>")).rejects.toThrow(
-          "Missing file or directory: '<MISSING>'"
-        )
-      ));
-  });
-});
-
-describe("Asserting a file/directory is missing from the file system", () => {
-  describe("when the subject exists", () => {
-    describe("when the subject is a file", () => {
-      it("should reject", () =>
-        switchToTempDirectory(async () => {
-          await writeFile("test.txt", "Test");
-          await expect(assertMissing("test.txt")).rejects.toThrow(
-            "File or directory 'test.txt' should not exist"
-          );
-        }));
-    });
-
-    describe("when the subject is a directory", () => {
-      it("should reject", () =>
-        switchToTempDirectory(async () => {
-          await mkdir("my_dir");
-          await expect(assertMissing("my_dir")).rejects.toThrow(
-            "File or directory 'my_dir' should not exist"
-          );
-        }));
-    });
-  });
-
-  describe("when the subject is missing", () => {
-    it("should resolve", () =>
-      switchToTempDirectory(() => assertMissing("<MISSING>")));
-  });
-});
-
-describe("Asserting the existence of a file/directory", () => {
-  describe("when asserting existence", () => {
-    it("should work", () =>
-      switchToTempDirectory(async () => {
-        await writeToArbitraryFile("mytest.txt");
-        await assertExistence("mytest.txt", true);
-      }));
-  });
-
-  describe("when negating existence", () => {
-    it("should work", () =>
-      switchToTempDirectory(() => assertExistence("<MISSING>", false)));
   });
 });
 
@@ -133,7 +52,7 @@ describe("Safe removal", () => {
 
         await safeRm("a");
 
-        await assertMissing("a");
+        expect("a").not.toExistInFileSystem();
       }));
   });
 
@@ -146,7 +65,7 @@ describe("Safe removal", () => {
 
         await safeRm(testFile);
 
-        await assertMissing(testFile);
+        expect(testFile).not.toExistInFileSystem();
       })));
 
   describe("when the path is missing", () => {
@@ -166,10 +85,10 @@ describe("Safe removal", () => {
 
         await safeRm("a", "r", "x.txt", "y.txt");
 
-        await assertMissing("a");
-        await assertMissing("r");
-        await assertMissing("x.txt");
-        await assertMissing("t.txt");
+        expect("a").not.toExistInFileSystem();
+        expect("r").not.toExistInFileSystem();
+        expect("x.txt").not.toExistInFileSystem();
+        expect("t.txt").not.toExistInFileSystem();
       }));
   });
 
@@ -183,8 +102,8 @@ describe("Safe removal", () => {
 
       await safeRm("a*");
 
-      await assertMissing("a");
-      await assertMissing("alpha.txt");
-      await assertMissing("az.txt");
+      expect("a").not.toExistInFileSystem();
+      expect("alpha.txt").not.toExistInFileSystem();
+      expect("az.txt").not.toExistInFileSystem();
     }));
 });

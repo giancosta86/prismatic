@@ -1,11 +1,11 @@
-/node_modules/
+/coverage/
 
 /dist/
 
-/coverage/
+/node_modules/
+
+/typedocs/
 
 /*-*.tgz
 
 /*.tsbuildinfo
-
-typedocs

@@ -15,38 +15,6 @@ export async function exists(path: string): Promise<boolean> {
 }
 
 /**
- * Resolves if the given file/directory exists.
- *
- * Otherwise, rejects with a self-explaining error.
- */
-export async function assertExisting(path: string): Promise<void> {
-  const existing = await exists(path);
-
-  if (!existing) {
-    throw new Error(`Missing file or directory: '${path}'`);
-  }
-}
-
-/**
- * Resolves if the given file/directory is missing.
- *
- * Otherwise, rejects with a self-explaining error.
- */
-export async function assertMissing(path: string): Promise<void> {
-  const existing = await exists(path);
-
-  if (existing) {
-    throw new Error(`File or directory '${path}' should not exist`);
-  }
-}
-
-/**
- * Assertion about the existence of a file or directory.
- */
-export const assertExistence = (path: string, shouldExist: boolean) =>
-  (shouldExist ? assertExisting : assertMissing)(path);
-
-/**
  * Temporarily switches to a given directory.
  *
  * As soon as the closure ends, no matter how, the previous

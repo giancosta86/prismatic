@@ -6,9 +6,8 @@ import {
   withTempDirectory,
   switchToTempDirectory,
   createTempDirectory,
-  rmTempDirectory
+  rmTempDirectory,
 } from "./temp.js";
-import { assertExisting, assertMissing } from "./paths.js";
 
 describe("Creating a temp directory", () => {
   it("should return a path starting with the system temp root", async () => {
@@ -18,7 +17,7 @@ describe("Creating a temp directory", () => {
 
   it("should actually create the temp directory", async () => {
     const tempDirectory = await createTempDirectory("prismatic");
-    assertExisting(tempDirectory);
+    expect(tempDirectory).toExistInFileSystem();
   });
 
   it("should have a basename starting with the given basename and underscore", async () => {
@@ -32,11 +31,11 @@ describe("Deleting a temp directory", () => {
     it("should delete the directory", async () => {
       const tempDirectory = await createTempDirectory("prismatic");
 
-      await assertExisting(tempDirectory);
+      expect(tempDirectory).toExistInFileSystem();
 
       await rmTempDirectory(tempDirectory);
 
-      await assertMissing(tempDirectory);
+      expect(tempDirectory).not.toExistInFileSystem();
     });
   });
 
@@ -46,7 +45,7 @@ describe("Deleting a temp directory", () => {
         const tempDirectory = await createTempDirectory("prismatic");
         await rmTempDirectory(tempDirectory);
 
-        await assertExisting(tempDirectory);
+        expect(tempDirectory).toExistInFileSystem();
       });
     });
   });
@@ -54,17 +53,17 @@ describe("Deleting a temp directory", () => {
 
 describe("Requesting a disposable temp directory", () => {
   it("should return a path starting with the system temp root", () =>
-    withTempDirectory("prismatic", async tempDirectory => {
+    withTempDirectory("prismatic", (tempDirectory) => {
       expect(tempDirectory).matches(RegExp(`^${tmpdir()}`));
     }));
 
   it("should return a brand-new temp directory", () =>
-    withTempDirectory("prismatic", tempDirectory =>
-      assertExisting(tempDirectory)
+    withTempDirectory("prismatic", (tempDirectory) =>
+      expect(tempDirectory).toExistInFileSystem()
     ));
 
   it("should have a basename starting with the given basename and underscore", () =>
-    withTempDirectory("mytest", tempDirectory => {
+    withTempDirectory("mytest", (tempDirectory) => {
       expect(basename(tempDirectory).startsWith("mytest_"));
     }));
 
@@ -72,12 +71,12 @@ describe("Requesting a disposable temp directory", () => {
     it("should delete the temp directory", async () => {
       let createdDirectory: string = "";
 
-      await withTempDirectory("prismatic", async tempDirectory => {
+      await withTempDirectory("prismatic", async (tempDirectory) => {
         createdDirectory = tempDirectory;
-        await assertExisting(tempDirectory);
+        expect(tempDirectory).toExistInFileSystem();
       });
 
-      await assertMissing(createdDirectory);
+      expect(createdDirectory).not.toExistInFileSystem();
     });
   });
 
@@ -86,19 +85,19 @@ describe("Requesting a disposable temp directory", () => {
       withFlag(PrismaticFlags.keepTempDirectory.name, async () => {
         let createdDirectory: string = "";
 
-        await withTempDirectory("prismatic", async tempDirectory => {
+        await withTempDirectory("prismatic", async (tempDirectory) => {
           createdDirectory = tempDirectory;
-          await assertExisting(tempDirectory);
+          expect(tempDirectory).toExistInFileSystem();
         });
 
-        await assertExisting(createdDirectory);
+        expect(createdDirectory).toExistInFileSystem();
       }));
   });
 });
 
 describe("Switching to a temp directory", () => {
   it("should change to the temporary directory", () =>
-    switchToTempDirectory("prismatic", tempDirectory => {
+    switchToTempDirectory("prismatic", (tempDirectory) => {
       expect(process.cwd()).toBe(tempDirectory);
     }));
 
