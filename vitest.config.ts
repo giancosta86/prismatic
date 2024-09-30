@@ -5,10 +5,7 @@ export default defineConfig({
   plugins: [tsconfigPaths()],
 
   test: {
-    setupFiles: [
-      "@giancosta86/rigoletto/nodejs",
-      "@giancosta86/rigoletto/universal",
-    ],
+    setupFiles: ["@giancosta86/rigoletto/matchers"],
 
     testTimeout: 30_000,
     hookTimeout: 30_000,

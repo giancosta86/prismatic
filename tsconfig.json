@@ -1,19 +1,18 @@
 {
   "extends": "./tsconfig.lib.json",
 
-  "include": ["src/**/*", "tests/**/*", "globals.d.ts"],
+  "include": ["src/**/*", "tests/**/*"],
 
   "compilerOptions": {
     "rootDir": ".",
     "noEmit": true,
 
+    "types": ["@giancosta86/rigoletto/matchers"],
+
     "baseUrl": ".",
     "paths": {
-      "~/env": ["src/env/index.js"],
-      "~/fs": ["src/fs/index.js"],
-      "~/logging": ["src/logging/index.js"],
-      "~/packages": ["src/packages/index.js"],
-      "~/run": ["src/run/index.js"]
+      "~/*": ["src/*/index.js"],
+      "~~/*": ["tests/*/index.js"]
     }
   }
 }
